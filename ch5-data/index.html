@@ -7,9 +7,37 @@
   </head>
   <body>
     <script type="text/javascript">
+      /*  
       d3.select("body") // given a CSS selector as input, will return a reference to the first matching element in DOM
         .append("p") // creates new specified DOM element
         .text("Hello world!"); // takes a string and inserts it between the opening and closing tags of current selection
+      */
+
+      var rowConverter = function(d) {
+
+      }
+
+      d3.csv("food.csv", function(data) {
+        return {
+          Food: data.Food,
+          Deliciousness: parseFloat(data.Deliciousness)
+        };
+      }).then(function(data){ //convenience Fetch API method for csvs
+        console.log(data);
+      });
+
+      var dataset = [5, 10, 15, 20, 25];
+
+      d3.select("body") //finds body in DOM and returns ref to it
+        .selectAll("p") //selects all paragraphs in DOM, yet to be created
+        .data(dataset) //counts and parses our data values
+        .enter() //creates new data-bound elements. Looks at current DOM selection, then at the data. If
+        .append("p") //takes the empty placeholder selection created by enter() and appends a p element into the DOM, 
+                     //returns a reference to the newly created element
+        .text(function (d){ return d; }) // inserts a text value into the newly created p element
+        .style("color", function(d){
+          return d % 2 == 0 ? "red" : "black"; // make color red if d is even
+        });
     </script>
   </body>
 </html>
