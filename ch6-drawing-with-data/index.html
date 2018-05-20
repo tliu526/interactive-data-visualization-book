@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"> 
+    <title>Chapter 6: Drawing with Data</title>
+    <script type="text/javascript" src="../d3/d3.js"></script>
+    <style>
+    div.bar {
+      display: inline-block;
+      width: 20px;
+      height: 75px;
+      background-color: teal;
+      margin-right: 2px;
+    }
+    </style>
+  </head>
+  <!-- the following empty div is a semantic no-no
+  <div class="bar"></div>-->
+  <body>
+    <script type="text/javascript">
+      var dataset = [];
+      for (var i = 0; i < 25; i++){
+        dataset.push(Math.floor(Math.random() * 30));
+      }
+      d3.select("body")
+        .selectAll("div")
+        .data(dataset)
+        .enter()
+        .append("div")
+        .attr("class", "bar")
+        .style("height", function(d){
+          var barHeight = d * 5;
+          return barHeight + "px";
+        });
+
+      // SVGs
+
+      var w = 500;
+      var h = 100;
+      var svg = d3.select("body").append("svg");
+      svg.attr("width", w)
+         .attr("height", h);
+
+      var svg_dataset = [5, 10, 15, 20, 25];
+      var circles = svg.selectAll("circle")
+                        .data(svg_dataset)
+                        .enter()
+                        .append("circle");
+      circles.attr("cx", function(datum, idx) {
+                return (idx * 50) + 25;
+              })
+             .attr("cy", h/2)
+             .attr("r", function(datum) {
+               return datum;
+             })
+             .attr("fill", "yellow")
+             .attr("stroke", "orange")
+             .attr("stroke-width", function(datum){
+               return datum/8;
+             });
+
+      //drawing a bar chart
+      var svg_width = 500;
+      var svg_height = 200;
+      var bar_padding = 1;
+      //create SVG element
+      var svg = d3.select("body")
+                  .append("svg")
+                  .attr("width", svg_width)
+                  .attr("height", svg_height);
+
+      svg.selectAll("rect")
+         .data(dataset)
+         .enter()
+         .append("rect")
+         .attr("x", function(datum, idx){
+           return idx * (svg_width / dataset.length);
+         })
+         .attr("y", function(datum){
+           return svg_height - (datum*4);
+         })
+         .attr("width", svg_width / dataset.length - bar_padding)
+         .attr("height", function(datum){
+           return datum * 4;
+         })
+         .attr("fill", function(datum) {
+           return "rgb(0, " + Math.round(datum * 10) + ",0)";
+         });
+
+      //Labels
+      svg.selectAll("text")
+         .data(dataset)
+         .enter()
+         .append("text")
+         .text(function(datum){
+           return datum;
+         })
+         .attr("x", function(datum, idx){
+           return idx * (svg_width / dataset.length) + 
+           (svg_width / dataset.length - bar_padding) / 2;
+         })
+         .attr("y", function(datum){
+           return svg_height - (datum*4) + 14;
+         })
+         .attr("font-family", "sans-serif")
+         .attr("font-size", "11px")
+         .attr("fill", "white")
+         .attr("text-anchor", "middle");
+
+      //scatterplot
+      var scatter_data = [
+							[5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+							[410, 12], [475, 44], [25, 67], [85, 21], [220, 88]
+						  ];
+
+      //create SVG element
+      var svg = d3.select("body")
+            .append("svg")
+            .attr("width", svg_width)
+            .attr("height", svg_height);
+      svg.selectAll("circle")
+         .data(scatter_data)
+         .enter()
+         .append("circle")
+         .attr("cx", function(datum) {
+           return datum[0];
+         })
+         .attr("cy", function(datum){
+           return datum[1];
+         })
+         .attr("r", function(datum){
+           return Math.sqrt(svg_height - datum[1]);
+         });
+
+      svg.selectAll("text")
+         .data(scatter_data)
+         .enter()
+         .append("text")
+         .text(function(datum){
+           return datum[0] + ", " + datum[1];
+         })
+         .attr("x", function(datum){
+           return datum[0];
+         })
+         .attr("y", function(datum){
+           return datum[1];
+         })
+         .attr("font-family", "sans-serif")
+         .attr("font-size", "11px")
+         .attr("fill", "red");
+
+      
+    </script>
+  </body>
+</html>
