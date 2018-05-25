@@ -1,0 +1,17 @@
+.axis path,
+.axis line {
+  stroke: burlywood;
+  shape-rendering: crispEdges;
+}
+/* CSS Comment */
+.axis text {
+  font-family: Optima, Futura, sans-serif;
+  font-weight: bold;
+  font-size: 10px;
+  fill: teal;
+}
+
+line {
+  stroke: gray;
+  stroke-width: 1px;
+}
