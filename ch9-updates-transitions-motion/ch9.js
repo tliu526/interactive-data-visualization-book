@@ -61,7 +61,8 @@ svg.selectAll("text")
     .attr("fill", "white")
     .attr("text-anchor", "middle");
 
-d3.select("p")
+// adds values
+d3.select("#add")
   .on("click", function(){
     /*
     var numValues = dataset.length;               //Count original length of dataset
@@ -112,6 +113,7 @@ d3.select("p")
        .attr("y", function(d){
          return height - yScale(d);
        })
+       .attr("width", xScale.bandwidth())
        .attr("height", function(d){
         return yScale(d);
        })
@@ -156,6 +158,71 @@ d3.select("p")
        .attr("fill", function(datum){
          return datum <= 3 ? "black" : "white";
     });
+  });
+
+// removes values
+d3.select("#remove")
+  .on("click", function(){
+    //Removes one value from dataset
+    dataset.pop();
+
+    xScale.domain(d3.range(dataset.length));	
+    yScale.domain([0, d3.max(dataset)]);
+
+    var bars = svg.selectAll("rect")
+                  .data(dataset);
+    // why is enter() needed here? answer: it isn't
+    bars.transition()
+        .duration(500)
+        .delay(function (datum, idx){
+          return idx / dataset.length * 1000;
+        })
+        .attr("x", function(datum, idx){
+          return xScale(idx);
+        })
+        .attr("y", function(d){
+          return height - yScale(d);
+        })
+        .attr("width", xScale.bandwidth())
+        .attr("height", function(d){
+          return yScale(d);
+        })
+        .attr("fill", function(datum){
+          return "rgb(0,0," + datum * 10 + ")";
+        });
+
+    bars.exit() // selects elements in current selection without data
+        .transition()
+        .duration(500)
+        .attr("x", width)
+        .remove();
+    
+    
+    var text = svg.selectAll("text")
+                  .data(dataset);
+    text.exit()
+        .transition()
+        .duration(500)
+        .remove();
+
+    text.transition()
+        .duration(500)
+        .delay(function (datum, idx){
+         return idx / dataset.length * 1000;
+         })
+        .text(function(datum){
+          return datum;
+        })
+        .attr("x", function(datum, idx){
+          return xScale(idx) + xScale.bandwidth() / 2;
+        })
+        .attr("y", function(datum){
+          var pad = datum <= 3 ? -2: 15;
+          return height - yScale(datum) + pad;
+        })
+        .attr("fill", function(datum){
+          return datum <= 3 ? "black" : "white";
+     });
   });
 /*
 // random scatter plot
